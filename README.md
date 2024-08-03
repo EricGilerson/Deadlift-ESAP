@@ -63,8 +63,8 @@ This file includes the script to generate linkage diagrams from deadlift videos 
 This script is used to test the trained neural network on new deadlift videos. It loads the trained model, processes the linkage diagrams, and evaluates the deadlift form using the neural network. The evaluation shows the confidence that the model has per each frame in the video and if the frame is below the confidence separator(60%), the output shows how far each keypoint is off by what the model predicts should be perfect form. By this offset in combination with another model such as a custom GPT, the results can be put into understandable words.
 
 #### Evaluation Sample Result
-```yaml
 <div style="max-height: 300px; overflow-y: scroll;">
+```yaml
 Evaluating pose for file: model/pose_data/test\Anglegoodform1.json
 2/2 [==============================] - 0s 997us/step
 Pose 0: Good form (97.79% confidence).
@@ -214,6 +214,7 @@ Pose 95: Bad form (4.77% confidence). Suggestions: ['Keypoint 0 is off by 645.16
 Pose 96: Bad form (3.18% confidence). Suggestions: ['Keypoint 0 is off by 648.73 units.', 'Keypoint 1 is off by 542.55 units.', 'Keypoint 2 is off by 572.01 units.', 'Keypoint 3 is off by 665.47 units.', 'Keypoint 4 is off by 770.51 units.', 'Keypoint 5 is off by 497.52 units.', 'Keypoint 6 is off by 608.00 units.', 'Keypoint 7 is off by 678.23 units.', 'Keypoint 8 is off by 427.37 units.', 'Keypoint 9 is off by 616.38 units.', 'Keypoint 10 is off by 759.20 units.', 'Keypoint 11 is off by 412.07 units.', 'Keypoint 12 is off by 591.66 units.', 'Keypoint 13 is off by 19.80 units.', 'Keypoint 14 is off by 625.34 units.', 'Keypoint 15 is off by 22.63 units.', 'Keypoint 16 is off by 585.69 units.', 'Keypoint 17 is off by 25.46 units.']
 Pose 97: Bad form (3.36% confidence). Suggestions: ['Keypoint 0 is off by 653.72 units.', 'Keypoint 1 is off by 546.14 units.', 'Keypoint 2 is off by 576.42 units.', 'Keypoint 3 is off by 666.38 units.', 'Keypoint 4 is off by 769.44 units.', 'Keypoint 5 is off by 501.82 units.', 'Keypoint 6 is off by 613.18 units.', 'Keypoint 7 is off by 678.23 units.', 'Keypoint 8 is off by 431.28 units.', 'Keypoint 9 is off by 618.39 units.', 'Keypoint 10 is off by 765.47 units.', 'Keypoint 11 is off by 412.07 units.', 'Keypoint 12 is off by 591.66 units.', 'Keypoint 13 is off by 19.80 units.', 'Keypoint 14 is off by 630.32 units.', 'Keypoint 15 is off by 22.63 units.', 'Keypoint 16 is off by 589.93 units.', 'Keypoint 17 is off by 25.46 units.']
 ```
+</div>
 
 
 ## Future Work
