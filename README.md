@@ -65,9 +65,6 @@ This script tests the trained neural network on new deadlift videos. It loads th
 #### Evaluation Sample Result
 ```markdown
 # Example evaluation of good form
-<details>
-  <summary>Click to expand Pose Data 1</summary>
-```yaml
 Evaluating pose for file: model/pose_data/test\Anglegoodform1.json
 2/2 [==============================] - 0s 997us/step
 Pose 0: Good form (97.79% confidence).
@@ -117,12 +114,9 @@ Pose 43: Good form (67.72% confidence).
 Pose 44: Good form (69.94% confidence).
 Pose 45: Good form (69.41% confidence).
 ```
-</details>
 
+```markdown
 # Example evaluation of bad form
-<details>
-  <summary>Click to expand Pose Data 2</summary>
-```yaml
 Evaluating pose for file: model/pose_data/test\Bad23.json
 4/4 [==============================] - 0s 1ms/step
 Pose 0: Bad form (0.01% confidence). Suggestions: ['Keypoint 0 is off by 604.80 units.', 'Keypoint 1 is off by 500.19 units.', 'Keypoint 2 is off by 524.05 units.', 'Keypoint 3 is off by 592.96 units.', 'Keypoint 4 is off by 664.68 units.', 'Keypoint 5 is off by 470.66 units.', 'Keypoint 7 is off by 11.31 units.', 'Keypoint 8 is off by 332.70 units.', 'Keypoint 9 is off by 538.93 units.', 'Keypoint 10 is off by 670.59 units.', 'Keypoint 11 is off by 328.94 units.', 'Keypoint 12 is off by 18.38 units.', 'Keypoint 13 is off by 19.80 units.', 'Keypoint 14 is off by 581.84 units.', 'Keypoint 15 is off by 22.63 units.', 'Keypoint 16 is off by 545.85 units.', 'Keypoint 17 is off by 25.46 units.']
@@ -223,8 +217,6 @@ Pose 94: Bad form (4.63% confidence). Suggestions: ['Keypoint 0 is off by 643.20
 Pose 95: Bad form (4.77% confidence). Suggestions: ['Keypoint 0 is off by 645.16 units.', 'Keypoint 1 is off by 539.45 units.', 'Keypoint 2 is off by 569.60 units.', 'Keypoint 3 is off by 661.91 units.', 'Keypoint 4 is off by 766.78 units.', 'Keypoint 5 is off by 495.32 units.', 'Keypoint 7 is off by 11.31 units.', 'Keypoint 8 is off by 423.82 units.', 'Keypoint 9 is off by 616.38 units.', 'Keypoint 10 is off by 752.44 units.', 'Keypoint 11 is off by 411.18 units.', 'Keypoint 12 is off by 583.47 units.', 'Keypoint 13 is off by 19.80 units.', 'Keypoint 14 is off by 621.77 units.', 'Keypoint 15 is off by 22.63 units.', 'Keypoint 16 is off by 581.41 units.', 'Keypoint 17 is off by 25.46 units.']
 Pose 96: Bad form (3.18% confidence). Suggestions: ['Keypoint 0 is off by 648.73 units.', 'Keypoint 1 is off by 542.55 units.', 'Keypoint 2 is off by 572.01 units.', 'Keypoint 3 is off by 665.47 units.', 'Keypoint 4 is off by 770.51 units.', 'Keypoint 5 is off by 497.52 units.', 'Keypoint 6 is off by 608.00 units.', 'Keypoint 7 is off by 678.23 units.', 'Keypoint 8 is off by 427.37 units.', 'Keypoint 9 is off by 616.38 units.', 'Keypoint 10 is off by 759.20 units.', 'Keypoint 11 is off by 412.07 units.', 'Keypoint 12 is off by 591.66 units.', 'Keypoint 13 is off by 19.80 units.', 'Keypoint 14 is off by 625.34 units.', 'Keypoint 15 is off by 22.63 units.', 'Keypoint 16 is off by 585.69 units.', 'Keypoint 17 is off by 25.46 units.']
 Pose 97: Bad form (3.36% confidence). Suggestions: ['Keypoint 0 is off by 653.72 units.', 'Keypoint 1 is off by 546.14 units.', 'Keypoint 2 is off by 576.42 units.', 'Keypoint 3 is off by 666.38 units.', 'Keypoint 4 is off by 769.44 units.', 'Keypoint 5 is off by 501.82 units.', 'Keypoint 6 is off by 613.18 units.', 'Keypoint 7 is off by 678.23 units.', 'Keypoint 8 is off by 431.28 units.', 'Keypoint 9 is off by 618.39 units.', 'Keypoint 10 is off by 765.47 units.', 'Keypoint 11 is off by 412.07 units.', 'Keypoint 12 is off by 591.66 units.', 'Keypoint 13 is off by 19.80 units.', 'Keypoint 14 is off by 630.32 units.', 'Keypoint 15 is off by 22.63 units.', 'Keypoint 16 is off by 589.93 units.', 'Keypoint 17 is off by 25.46 units.']
-```
-</details>
 ```
 
 
