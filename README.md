@@ -16,6 +16,22 @@ Deadlift-ESAP is a project aimed at creating and training a neural network to de
 - Keras
 - OpenAI
 
+### Installation
+
+1. Clone the repository:
+
+    ```bash
+    git clone https://github.com/yourusername/Deadlift-ESAP.git
+    cd Deadlift-ESAP
+    ```
+
+2. Install the required packages:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+
 ## File Descriptions
 
 ### `network.py`
@@ -58,13 +74,14 @@ This file includes the script to generate linkage diagrams from deadlift videos 
 
 #### Linkage GIF
 
-#### This video only shows 13 points of the linkage because that is all that the video can produce, but there is 18 points
+#### This video only shows 13 points of the linkage because that is all that the video can produce, but there are 18 points
+![](https://github.com/EricGilerson/Deadlift-ESAP/blob/main/linkage.gif)
 
 
 ### Angles GIF
 
 #### The model was trained on 3 angles and this video shows all of them
-
+![](https://github.com/EricGilerson/Deadlift-ESAP/blob/main/angles.gif)
 ### `testmodel.py`
 This script tests the trained neural network on new deadlift videos. It loads the trained model, processes the linkage diagrams, and evaluates the deadlift form using the neural network. The evaluation shows the confidence that the model has per each frame in the video and if the frame is below the confidence separator(60%), the output shows how far each keypoint is off by what the model predicts should be perfect form. By this offset in combination with another model such as a custom GPT, the results can be put into understandable words.
 
