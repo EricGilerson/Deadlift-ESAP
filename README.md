@@ -65,8 +65,7 @@ This script tests the trained neural network on new deadlift videos. It loads th
 #### Evaluation Sample Result
 ```markdown
 <div style="max-height: 30px; overflow-y: auto;">
-  
-```yaml
+```plaintext
 Evaluating pose for file: model/pose_data/test\Anglegoodform1.json
 2/2 [==============================] - 0s 997us/step
 Pose 0: Good form (97.79% confidence).
