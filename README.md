@@ -75,6 +75,7 @@ This file includes the script to generate linkage diagrams from deadlift videos 
 #### Linkage GIF
 
 #### This video only shows 13 points of the linkage because that is all that the video can produce, but there are 18 points
+##### Razin Farooqi is the one in the clip
 ![](https://github.com/EricGilerson/Deadlift-ESAP/blob/main/linkage.gif)
 
 
