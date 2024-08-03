@@ -63,9 +63,8 @@ This file includes the script to generate linkage diagrams from deadlift videos 
 This script tests the trained neural network on new deadlift videos. It loads the trained model, processes the linkage diagrams, and evaluates the deadlift form using the neural network. The evaluation shows the confidence that the model has per each frame in the video and if the frame is below the confidence separator(60%), the output shows how far each keypoint is off by what the model predicts should be perfect form. By this offset in combination with another model such as a custom GPT, the results can be put into understandable words.
 
 #### Evaluation Sample Result
-```
-<div style="max-height: 300px; overflow-y: scroll;">
-```yaml 
+```markdown
+<div style="max-height: 300px; overflow-y: scroll; white-space: pre; font-family: monospace; border: 1px solid #ccc; padding: 10px;">
 Evaluating pose for file: model/pose_data/test\Anglegoodform1.json
 2/2 [==============================] - 0s 997us/step
 Pose 0: Good form (97.79% confidence).
