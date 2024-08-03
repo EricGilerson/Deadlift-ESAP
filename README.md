@@ -63,8 +63,9 @@ This file includes the script to generate linkage diagrams from deadlift videos 
 This script tests the trained neural network on new deadlift videos. It loads the trained model, processes the linkage diagrams, and evaluates the deadlift form using the neural network. The evaluation shows the confidence that the model has per each frame in the video and if the frame is below the confidence separator(60%), the output shows how far each keypoint is off by what the model predicts should be perfect form. By this offset in combination with another model such as a custom GPT, the results can be put into understandable words.
 
 #### Evaluation Sample Result
-```yaml
+
 # Example evaluation of good form
+```yaml
 Evaluating pose for file: model/pose_data/test\Anglegoodform1.json
 2/2 [==============================] - 0s 997us/step
 Pose 0: Good form (97.79% confidence).
@@ -115,8 +116,8 @@ Pose 44: Good form (69.94% confidence).
 Pose 45: Good form (69.41% confidence).
 ```
 
-```yaml
 # Example evaluation of bad form
+```yaml
 Evaluating pose for file: model/pose_data/test\Bad23.json
 4/4 [==============================] - 0s 1ms/step
 Pose 0: Bad form (0.01% confidence). Suggestions: ['Keypoint 0 is off by 604.80 units.', 'Keypoint 1 is off by 500.19 units.', 'Keypoint 2 is off by 524.05 units.', 'Keypoint 3 is off by 592.96 units.', 'Keypoint 4 is off by 664.68 units.', 'Keypoint 5 is off by 470.66 units.', 'Keypoint 7 is off by 11.31 units.', 'Keypoint 8 is off by 332.70 units.', 'Keypoint 9 is off by 538.93 units.', 'Keypoint 10 is off by 670.59 units.', 'Keypoint 11 is off by 328.94 units.', 'Keypoint 12 is off by 18.38 units.', 'Keypoint 13 is off by 19.80 units.', 'Keypoint 14 is off by 581.84 units.', 'Keypoint 15 is off by 22.63 units.', 'Keypoint 16 is off by 545.85 units.', 'Keypoint 17 is off by 25.46 units.']
