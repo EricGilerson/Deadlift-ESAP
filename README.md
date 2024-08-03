@@ -56,13 +56,20 @@ def create_model():
 ### `pose.py`
 This file includes the script to generate linkage diagrams from deadlift videos using OpenPose. It processes raw video data to identify joint points and create a full linkage representation of the deadlift motion.
 
-#### Example GIF
-(Insert example GIF here)
+#### Linkage GIF
+
+#### This video only shows 13 points of the linkage because that is all that the video can produce, but there is 18 points
+
+
+### Angles GIF
+
+#### The model was trained on 3 angles and this video shows all of them
 
 ### `testmodel.py`
 This script tests the trained neural network on new deadlift videos. It loads the trained model, processes the linkage diagrams, and evaluates the deadlift form using the neural network. The evaluation shows the confidence that the model has per each frame in the video and if the frame is below the confidence separator(60%), the output shows how far each keypoint is off by what the model predicts should be perfect form. By this offset in combination with another model such as a custom GPT, the results can be put into understandable words.
 
 ## Evaluation Sample Result
+
 
 ### Example evaluation of good form
 ```yaml
