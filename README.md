@@ -1,7 +1,7 @@
 # Deadlift-ESAP
 
 ## Overview
-Deadlift-ESAP is a project aimed at creating and training a neural network to determine proper deadlift form. The project includes scripts to generate linkage diagrams from deadlift videos, process these diagrams into data models, and use these models to train a neural network capable of distinguishing good form from bad form in deadlifting.
+Deadlift-ESAP is a project aimed at creating and training a neural network to determine proper deadlift form. The project includes scripts to generate linkage diagrams from deadlift videos, process these diagrams into data models, and use these models to train a neural network capable of distinguishing good form from bad form in deadlifting. This project was created and for the purpose of Engineering Summer Academy at Penn.
 
 ## Features
 - **Linkage Diagram Generation**: Convert deadlift videos into biomechanical linkage diagrams.
@@ -246,6 +246,7 @@ Pose 97: Bad form (3.36% confidence). Suggestions: ['Keypoint 0 is off by 653.72
 
 
 ## Future Work
+- **Paper**: Currently a paper is being written on the project which will be included in this repository when finished.
 - **App Development**: Bundle the project into a user-friendly app for broader accessibility.
 - **Expansion to Other Exercises**: Extend the model to analyze other compound lifts and exercises.
 
