@@ -34,7 +34,7 @@ Deadlift-ESAP is a project aimed at creating and training a neural network to de
 
 ## File Descriptions
 
-### `network.py`
+### `classifiernetwork.py`
 This file contains the neural network implementation used to evaluate the deadlift form. It includes the architecture of the model, the training process, and the evaluation metrics. Here is a snippet of the model for classification and there is a similar model for the prediction of key points on the good form as you can see in the output of the testmodel.py
 
 #### Code Snippet
