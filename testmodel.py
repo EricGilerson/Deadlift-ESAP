@@ -1,6 +1,9 @@
 import os
 import json
-from network import normalize_data, provide_feedback, n_points
+
+import numpy as np
+
+from classifiernetwork import normalize_data, n_points
 from tensorflow.keras.models import load_model
 
 # Path to the folder containing test JSON files
@@ -35,6 +38,23 @@ def evaluate_pose(test_json_folder, classification_model, deviation_model):
     feedbacks = provide_feedback(classification_model, deviation_model, all_poses)
     for (filename, frame_index), feedback in zip(file_frame_indices, feedbacks):
         print(f"Feedback for frame {frame_index} in file {filename}:\t{feedback}")
+def provide_feedback(classification_model, deviation_model, poses):
+    normalized_poses = normalize_data(np.array(poses))
+    is_correct = classification_model.predict(normalized_poses)
+    deviations = deviation_model.predict(normalized_poses)
 
+    feedbacks = []
+    for idx, pose in enumerate(poses):
+        if is_correct[idx] >= 0.6:
+            #feedbacks.append(f"Frame {idx}: Good Form ({round(is_correct[idx][0]*100,4)}%)")
+
+            feedback = [(f"Frame {idx}: Good Form ({round(is_correct[idx][0]*100,4)}%)")]
+            feedback.extend([f"Keypoint {i}: x deviation = {deviations[idx][2 * i]:.2f}, y deviation = {deviations[idx][2 * i + 1]:.2f}" for i in range(n_points)])
+            feedbacks.append("\t".join(feedback))
+        else:
+            feedback = [f"Frame {idx}: Bad Form ({round(is_correct[idx][0]*100,4)}%), Suggestions:"]
+            feedback.extend([f"Keypoint {i}: x deviation = {deviations[idx][2 * i]:.2f}, y deviation = {deviations[idx][2 * i + 1]:.2f}" for i in range(n_points)])
+            feedbacks.append("\t".join(feedback))
+    return feedbacks
 # Evaluate poses
 evaluate_pose(test_json_folder, classification_model, deviation_model)
