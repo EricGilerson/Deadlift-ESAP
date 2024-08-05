@@ -2,16 +2,25 @@ import os
 import json
 import numpy as np
 import matplotlib.pyplot as plt
-from keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
-from keras.layers import BatchNormalization, LeakyReLU, Dropout, Dense, Input, Conv1D, GlobalAveragePooling1D
+from keras.callbacks import ReduceLROnPlateau, EarlyStopping, LearningRateScheduler
+from keras.layers import BatchNormalization, LeakyReLU, Dropout, Dense, Input, Conv2D, GlobalAveragePooling2D, Flatten, Reshape
 from keras.models import Model
+from keras.src.layers import Multiply, Lambda
+from keras.src.optimizers import Adam
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.regularizers import l2
+import tensorflow as tf
+import tensorflow.keras.backend as K
+import altModels
+from altModels import *
 
 n_points = 18
+temporal_dim = 10
+physical_devices = tf.config.list_physical_devices('GPU')
+if len(physical_devices) > 0:
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 def normalize_data(data):
-    max_value = 1.0
+    max_value = np.max(data[data != -1])
     normalized_data = np.where(data != -1, data / max_value, -1)
     return normalized_data
 
@@ -34,34 +43,29 @@ def load_pose_data(data_folder):
                     if len(flat_pose) == n_points * 2:
                         data.append(flat_pose)
                     else:
-                        print(f"Incomplete data in frame {frame_index} of file {filename}")
+                        print(f"Incomplete data in frame {frame_index} of file {filename}: expected {n_points * 2} elements, got {len(flat_pose)}")
                 else:
                     print(f"Incomplete data in frame {frame_index} of file {filename}")
-    return np.array(data)
+    data = np.array(data)
+    if data.size % (n_points * 2) != 0:
+        raise ValueError(f"Data size {data.size} is not a multiple of {n_points * 2}")
+    return data
 
-def create_deviation_model(input_shape):
-    inputs = Input(shape=input_shape)
-    x = Conv1D(64, kernel_size=3, activation='relu', padding='same')(inputs)
-    x = BatchNormalization()(x)
-    x = Conv1D(128, kernel_size=3, activation='relu', padding='same')(x)
-    x = BatchNormalization()(x)
-    x = Conv1D(256, kernel_size=3, activation='relu', padding='same')(x)
-    x = BatchNormalization()(x)
-    x = GlobalAveragePooling1D()(x)
-    x = Dense(256, kernel_regularizer=l2(0.01))(x)
-    x = LeakyReLU(alpha=0.01)(x)
-    x = Dropout(0.5)(x)
-    x = Dense(128, kernel_regularizer=l2(0.01))(x)
-    x = LeakyReLU(alpha=0.01)(x)
-    x = Dropout(0.5)(x)
-    x = Dense(64, kernel_regularizer=l2(0.01))(x)
-    x = LeakyReLU(alpha=0.01)(x)
-    x = Dropout(0.5)(x)
-    outputs = Dense(n_points * 2, activation='linear')(x)
+def mask_invalid_keypoints(data):
+    mask = (data != -1).astype(np.float32)
+    return mask
 
-    model = Model(inputs, outputs)
-    model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mae'])
-    return model
+def custom_loss(y_true, y_pred):
+    mask = K.cast(y_true != -1, dtype=K.floatx())
+    euclidean_loss = K.sum(mask[:, :, 0] * mask[:, :, 1] * K.sqrt(K.square(y_true[:, :, 0] - y_pred[:, :, 0]) + K.square(y_true[:, :, 1] - y_pred[:, :, 1]))) / K.sum(mask[:, :, 0] * mask[:, :, 1])
+    return euclidean_loss
+
+def step_decay(epoch):
+    initial_lr = 0.001
+    drop = 0.8
+    epochs_drop = 25.0
+    lr = initial_lr * (drop ** np.floor((1 + epoch) / epochs_drop))
+    return lr
 
 def main_training_cycle_deviation():
     good_form_folder_front = "model/pose_data/good_front"
@@ -72,9 +76,10 @@ def main_training_cycle_deviation():
     good_data_side = load_pose_data(good_form_folder_side)
     good_data_middle = load_pose_data(good_form_folder_middle)
 
-    # Combine good data for training the deviation model
-    data_combined = np.concatenate((good_data_front, good_data_side, good_data_middle), axis=0)
-    labels_combined = data_combined  # Use good form data as labels
+    good_data_combined = np.concatenate((good_data_front, good_data_side, good_data_middle), axis=0)
+
+    data_combined = good_data_combined
+    labels_combined = good_data_combined
 
     X_train, X_test, y_train, y_test = train_test_split(data_combined, labels_combined, test_size=0.2, random_state=42)
 
@@ -83,21 +88,28 @@ def main_training_cycle_deviation():
     y_train = normalize_data(y_train)
     y_test = normalize_data(y_test)
 
-    input_shape = (n_points * 2, 1)
-    X_train = X_train.reshape(-1, n_points * 2, 1)
-    X_test = X_test.reshape(-1, n_points * 2, 1)
-    y_train = y_train.reshape(-1, n_points * 2, 1)
-    y_test = y_test.reshape(-1, n_points * 2, 1)
+    mask_train = mask_invalid_keypoints(X_train)
+    mask_test = mask_invalid_keypoints(X_test)
 
-    model = create_deviation_model(input_shape)
+    # Calculate the number of samples
+    num_samples_train = X_train.shape[0]
+    num_samples_test = X_test.shape[0]
 
-    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=5, min_lr=0.001)
-    #early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
-    #checkpoint = ModelCheckpoint('best_model.h5', monitor='val_loss', save_best_only=True)
+    input_shape = (n_points, 2, 1)
+    X_train = X_train.reshape(num_samples_train, n_points, 2, 1)
+    X_test = X_test.reshape(num_samples_test, n_points, 2, 1)
+    y_train = y_train.reshape(num_samples_train, n_points, 2, 1)
+    y_test = y_test.reshape(num_samples_test, n_points, 2, 1)
+    mask_train = mask_train.reshape(num_samples_train, n_points, 2, 1)
+    mask_test = mask_test.reshape(num_samples_test, n_points, 2, 1)
 
-    history = model.fit(X_train, y_train, epochs=5000, validation_data=(X_test, y_test), callbacks=[reduce_lr])
+    model = altModels.create_2Dconv_model(input_shape)
 
-    loss, mae = model.evaluate(X_test, y_test)
+    reduce_lr = LearningRateScheduler(step_decay)
+
+    history = model.fit([X_train, mask_train], y_train, epochs=750, batch_size=32, validation_data=([X_test, mask_test], y_test),
+                        callbacks=[reduce_lr])
+    loss, mae = model.evaluate([X_test, mask_test], y_test)
     print(f"Deviation Model - Test MAE: {mae:.2f}")
 
     model.save('pose_deviation_model.h5')
@@ -122,27 +134,24 @@ def main_training_cycle_deviation():
     plt.savefig('deviation_model_loss.png')
     plt.show()
 
-def provide_feedback(classification_model_path, deviation_model_path, poses):
-    from tensorflow.keras.models import load_model
+    return model, history, X_test, y_test
 
-    classification_model = load_model(classification_model_path)
-    deviation_model = load_model(deviation_model_path)
+def analyze_results(model, X_test, y_test):
+    mask_test = mask_invalid_keypoints(X_test).reshape(-1, n_points, 2, 1)
+    y_pred = model.predict([X_test, mask_test])
 
-    normalized_poses = normalize_data(np.array(poses))
-    normalized_poses = normalized_poses.reshape(-1, n_points * 2, 1)
-    is_correct = classification_model.predict(normalized_poses)
-    deviations = deviation_model.predict(normalized_poses)
+    for i in range(5):  # Display 5 example predictions
+        print(f"Example {i + 1}:")
+        print("Predicted:", y_pred[i].reshape(-1))
+        print("Actual:", y_test[i].reshape(-1))
 
-    feedbacks = []
-    for idx, pose in enumerate(poses):
-        if is_correct[idx] >= 0.6:
-            feedbacks.append(f"Frame {idx}: Good Form ({round(is_correct[idx][0]*100,4)}%)")
-        else:
-            feedback = [f"Frame {idx}: Bad Form ({round(is_correct[idx][0]*100,4)}%), Suggestions:"]
-            corrected_pose = deviations[idx].reshape(-1) * 1.0  # Denormalize if necessary
-            feedback.extend([f"Keypoint {i}: x correction = {corrected_pose[2 * i]:.2f}, y correction = {corrected_pose[2 * i + 1]:.2f}" for i in range(n_points)])
-            feedbacks.append("\t".join(feedback))
-    return feedbacks
+    plt.figure()
+    plt.scatter(y_test.flatten(), y_pred.flatten())
+    plt.xlabel('Actual')
+    plt.ylabel('Predicted')
+    plt.title('Actual vs Predicted Deviations')
+    plt.show()
 
 if __name__ == '__main__':
-    main_training_cycle_deviation()
+    model, history, X_test, y_test = main_training_cycle_deviation()
+    analyze_results(model, X_test, y_test)
