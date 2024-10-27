@@ -229,7 +229,7 @@ Feedback for frame 97 in file Bad23.json:	Frame 97: Bad Form (0.4701%), Suggesti
 
 
 ## Future Work
-- **Paper**: Currently a paper is being written on the project which will be included in this repository when finished.
+- **Paper**: https://sportrxiv.org/index.php/server/preprint/view/471
 - **App Development**: Bundle the project into a user-friendly app for broader accessibility.
 - **Expansion to Other Exercises**: Extend the model to analyze other compound lifts and exercises.
 
